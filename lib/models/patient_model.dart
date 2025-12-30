@@ -1,38 +1,65 @@
-class PatientModel {
+enum PatientStatus { mild, stable, critical }
+
+enum Ward { general, icu, emergency, pediatrics, cardiology, orthopedics }
+
+class Patient {
   final String id;
   final String name;
+  final String avatar;
+  final String lastAppointment;
   final int age;
+  final String dateOfBirth;
   final String gender;
-  final String ward;
-  final String status;
   final String diagnosis;
-  final String assignedDoctor;
-  final DateTime admissionDate;
+  final PatientStatus status;
+  final Ward ward;
+  final String bedNumber;
 
-  PatientModel({
+  Patient({
     required this.id,
     required this.name,
+    required this.avatar,
+    required this.lastAppointment,
     required this.age,
+    required this.dateOfBirth,
     required this.gender,
-    required this.ward,
-    required this.status,
     required this.diagnosis,
-    required this.assignedDoctor,
-    required this.admissionDate,
+    required this.status,
+    required this.ward,
+    required this.bedNumber,
   });
 
-  factory PatientModel.fromJson(Map<String, dynamic> json) {
-    return PatientModel(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      age: json['age'] ?? 0,
-      gender: json['gender'] ?? '',
-      ward: json['ward'] ?? '',
-      status: json['status'] ?? 'stable',
-      diagnosis: json['diagnosis'] ?? '',
-      assignedDoctor: json['assigned_doctor'] ?? '',
-      admissionDate: DateTime.parse(
-          json['admission_date'] ?? DateTime.now().toIso8601String()),
+  factory Patient.fromJson(Map<String, dynamic> json) {
+    return Patient(
+      id: json['id'],
+      name: json['name'],
+      avatar: json['avatar'],
+      lastAppointment: json['lastAppointment'],
+      age: json['age'],
+      dateOfBirth: json['dateOfBirth'],
+      gender: json['gender'],
+      diagnosis: json['diagnosis'],
+      status: PatientStatus.values.firstWhere(
+        (e) => e.name.toLowerCase() == json['status'].toString().toLowerCase(),
+      ),
+      ward: Ward.values.firstWhere(
+        (e) => e.name.toLowerCase() == json['ward'].toString().toLowerCase(),
+      ),
+      bedNumber: json['bedNumber'],
     );
   }
+}
+
+class PatientStats {
+  final int total;
+  final int mild;
+  final int stable;
+  final int critical;
+
+  PatientStats({
+    required this.total,
+    required this.mild,
+    required this.stable,
+    required this.critical,
+  });
 }

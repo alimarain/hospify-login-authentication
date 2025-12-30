@@ -10,7 +10,7 @@ import '../widgets/custom_text_field.dart';
 import '../widgets/custom_checkbox.dart';
 import 'nurse_dashboard.dart';
 import 'doctor_dashboard.dart';
-import 'admin_dashboard.dart';
+import 'dashboard_screen.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -54,7 +54,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           dashboard = const DoctorDashboard();
           break;
         case UserRole.admin:
-          dashboard = const AdminDashboard();
+          dashboard = const DashboardScreen();
           break;
         default:
           return;
