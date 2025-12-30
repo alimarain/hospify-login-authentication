@@ -254,12 +254,14 @@
 //     );
 //   }
 // }
+//
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../utils/responsive_utils.dart';
 import '../widgets/summary_cards.dart';
-import '../widgets/doctor_specific_widgets.dart';
-import '../widgets/dashboard_header.dart';
+import '../widgets/doctor_specific_widgets.dart'; // ✅ Imports WardSummary, Tasks, and Appointments
+import '../widgets/dashboard_header.dart'; // Assumes you have this widget
 import '../providers/dashboard_providers.dart';
 
 class DoctorDashboard extends ConsumerWidget {
@@ -267,15 +269,14 @@ class DoctorDashboard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // ✅ FIX: No Scaffold, No Sidebar, No Row.
     // This widget simply returns the Scrollable Content.
-    // The MainLayout will handle the Sidebar and Background.
+    // The MainLayout handles the Sidebar and Background.
     return SingleChildScrollView(
       padding: const EdgeInsets.all(32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
+          // --- Header ---
           DashboardHeader(
             title: "Doctor's Dashboard",
             subtitle: "Welcome back, Dr. Sarah Johnson",
@@ -286,34 +287,37 @@ class DoctorDashboard extends ConsumerWidget {
 
           const SizedBox(height: 32),
 
-          // Cards
+          // --- Summary Cards (Total Patients, Mild, Stable, Critical) ---
           SummaryCards(data: ref.watch(doctorSummaryProvider)),
 
           const SizedBox(height: 32),
 
-          // Ward Summary
+          // --- Ward Summary (The new dark grid widget) ---
           const WardSummaryWidget(),
 
           const SizedBox(height: 32),
 
-          // Tasks & Appointments
+          // --- Tasks & Appointments (Responsive Layout) ---
           Responsive(
             mobile: const Column(
               children: [
                 DoctorTasksWidget(),
                 SizedBox(height: 32),
-                AppointmentsWidget()
+                AppointmentsWidget(),
               ],
             ),
             desktop: const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Tasks take up more space (flex: 3)
                 Expanded(flex: 3, child: DoctorTasksWidget()),
                 SizedBox(width: 24),
+                // Appointments take up less space (flex: 2)
                 Expanded(flex: 2, child: AppointmentsWidget()),
               ],
             ),
           ),
+
           const SizedBox(height: 48),
         ],
       ),

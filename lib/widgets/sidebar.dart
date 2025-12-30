@@ -392,6 +392,7 @@
 //     );
 //   }
 // }
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../theme/app_theme.dart';
@@ -431,7 +432,7 @@ class SideBar extends ConsumerWidget {
         children: [
           const Row(
             children: [
-              Text("MediCare",
+              Text("Hospify",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -467,16 +468,20 @@ class SideBar extends ConsumerWidget {
 
           _buildNavItem(context, ref, 0, "Dashboard", Icons.grid_view,
               selectedIndex == 0),
-          _buildNavItem(context, ref, 1, "Doctor Dashboard",
-              Icons.person_outline, selectedIndex == 1,
-              badge: "12"),
+          _buildNavItem(
+            context,
+            ref,
+            1,
+            "Doctor Dashboard",
+            Icons.person_outline,
+            selectedIndex == 1,
+          ),
           _buildNavItem(context, ref, 2, "Nurse Dashboard",
               Icons.medical_services_outlined, selectedIndex == 2),
           _buildNavItem(context, ref, 3, "Patients", Icons.people_outline,
               selectedIndex == 3),
           _buildNavItem(context, ref, 4, "My Appointments",
-              Icons.calendar_today_outlined, selectedIndex == 4,
-              badge: "5"),
+              Icons.calendar_today_outlined, selectedIndex == 4),
           _buildNavItem(context, ref, 5, "Prescriptions",
               Icons.description_outlined, selectedIndex == 5),
           _buildNavItem(context, ref, 6, "Settings", Icons.settings_outlined,

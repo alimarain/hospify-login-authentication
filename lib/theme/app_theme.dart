@@ -172,52 +172,71 @@
 //       ),
 //     );
 //   }
-// }
-
+// }import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
   // ---------------------------------------------------------------------------
-  // EXISTING COLORS (Do not remove - used by other screens)
+  // TARGET THEME COLORS (True Dark / Zinc Palette)
   // ---------------------------------------------------------------------------
-  static const Color background = Color(0xFF1E1E2D);
-  static const Color cardBackground = Color(0xFF2D2D3F);
-  static const Color card = Color(0xFF2D2D3F);
-  static const Color surface = Color(0xFF2D2D3F);
-  static const Color border = Color(0xFF3E3E4E);
 
-  static const Color textPrimary = Colors.white;
-  static const Color textSecondary = Colors.grey;
-  static const Color textMuted = Color(0xFF9E9E9E);
+  // 1. Backgrounds
+  // Main screen background: Very deep black/zinc (Matches your screenshots)
+  static const Color background = Color(0xFF09090B);
+
+  // Card background: Slightly lighter dark grey (Zinc-900)
+  static const Color card = Color(0xFF18181B);
+  static const Color cardBackground = Color(0xFF18181B);
+  static const Color surface = Color(0xFF18181B);
+
+  // 2. Borders
+  // Subtle dark grey to separate cards from background
+  static const Color border = Color(0xFF27272A);
+
+  // 3. Text Colors
+  static const Color textPrimary = Color(0xFFFAFAFA); // High contrast white
+  static const Color textSecondary = Color(0xFFA1A1AA); // Muted Zinc Grey
+  static const Color textMuted = Color(0xFF71717A); // Darker Grey
   static const Color foreground = Colors.white;
   static const Color mutedForeground = Colors.grey;
 
-  static const Color primaryAccent = Color(0xFF6C63FF);
-  static const Color secondaryAccent = Color(0xFF00D2B4);
-  static const Color orangeAccent = Color(0xFFFF8C00);
-  static const Color redAccent = Color(0xFFFF5252);
+  // 4. Accent Colors (UPDATED to Royal Blue)
+  // Changed from Purple (0xFF6C63FF) to Royal Blue (0xFF3B82F6)
+  static const Color primaryAccent = Color(0xFF3B82F6);
 
-  static const Color statusMild = Color(0xFF4CAF50);
-  static const Color statusStable = Color(0xFF2196F3);
-  static const Color statusCritical = Color(0xFFF44336);
+  static const Color secondaryAccent = Color(0xFF14B8A6); // Teal (Orthopedics)
+  static const Color orangeAccent = Color(0xFFF97316); // Orange (Emergency)
+
+  // 5. Status Colors
+  static const Color redAccent = Color(0xFFEF4444); // Vibrant Red for Text
+  static const Color statusMild = Color(0xFF22C55E); // Green
+  static const Color statusStable = Color(0xFF3B82F6); // Blue
+  static const Color statusCritical =
+      Color(0xFFDC2626); // Deep Red (Icon Badges)
 
   static const Color nurseColor = Color(0xFFEC407A);
   static const Color nurseBg = Color(0xFF38232C);
 
+  // 6. Critical Alert Footer (Specific to your design)
+  static const Color criticalBg = Color(0xFF2A1212); // The Dark Red Background
+  static const Color criticalBorder = Color(0xFF451818); // The Dark Red Border
+
   // ---------------------------------------------------------------------------
-  // NEW COLORS (For Light Theme support in main.dart)
+  // LIGHT MODE COLORS (Unchanged)
   // ---------------------------------------------------------------------------
   static const Color backgroundLight = Color(0xFFF4F6F8);
   static const Color surfaceLight = Colors.white;
   static const Color borderLight = Color(0xFFE0E0E0);
   static const Color textPrimaryLight = Color(0xFF1E1E2D);
   static const Color textSecondaryLight = Color(0xFF637381);
+
+  static var inputFill;
 }
 
 class AppTheme {
   // ---------------------------------------------------------------------------
-  // STATIC ACCESSORS (Preserved for existing screens)
+  // STATIC ACCESSORS
   // ---------------------------------------------------------------------------
   static const Color surface = AppColors.surface;
   static const Color background = AppColors.background;
@@ -232,20 +251,25 @@ class AppTheme {
   static const Color statusStable = AppColors.statusStable;
   static const Color statusCritical = AppColors.statusCritical;
 
-  static var cardColor;
+  static const Color cardColor = AppColors.card;
 
   // ---------------------------------------------------------------------------
-  // DARK THEME (Existing)
+  // DARK THEME CONFIGURATION
   // ---------------------------------------------------------------------------
   static ThemeData get darkTheme {
     return ThemeData.dark().copyWith(
       scaffoldBackgroundColor: AppColors.background,
       cardColor: AppColors.card,
+      canvasColor: AppColors.background, // Ensures Drawers match background
+
+      // Apply Google Fonts Inter to all text
       textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme).apply(
         bodyColor: AppColors.textPrimary,
         displayColor: AppColors.textPrimary,
       ),
+
       iconTheme: const IconThemeData(color: AppColors.textMuted),
+
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.background,
         elevation: 0,
@@ -256,9 +280,11 @@ class AppTheme {
           fontWeight: FontWeight.bold,
         ),
       ),
+
+      // Updated Input Decoration to match the dark cards
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.surface,
+        fillColor: AppColors.surface, // Matches Card Color
         hintStyle: const TextStyle(color: AppColors.textMuted),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -275,7 +301,9 @@ class AppTheme {
           borderSide: const BorderSide(color: AppColors.primaryAccent),
         ),
       ),
+
       dividerColor: AppColors.border,
+
       colorScheme: const ColorScheme.dark(
         primary: AppColors.primaryAccent,
         secondary: AppColors.secondaryAccent,
@@ -287,7 +315,7 @@ class AppTheme {
   }
 
   // ---------------------------------------------------------------------------
-  // LIGHT THEME (New - Added for main.dart)
+  // LIGHT THEME CONFIGURATION (Unchanged)
   // ---------------------------------------------------------------------------
   static ThemeData get lightTheme {
     return ThemeData.light().copyWith(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hospify/utils/responsive_utils.dart'; // Ensure correct path
-import '../widgets/sidebar.dart'; // Ensure correct path
+import '../utils/responsive_utils.dart';
+import '../widgets/sidebar.dart';
 import '../theme/app_theme.dart';
 
 class MainLayout extends StatelessWidget {
@@ -13,15 +13,13 @@ class MainLayout extends StatelessWidget {
     final isMobile = ResponsiveUtils.isMobile(context);
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: AppColors.background, // ✅ Matches dark theme
 
-      // 1. Mobile Drawer (Sidebar hides here on small screens)
       drawer: isMobile ? const Drawer(child: SideBar()) : null,
 
-      // 2. Mobile AppBar (To open drawer)
       appBar: isMobile
           ? AppBar(
-              backgroundColor: AppTheme.background,
+              backgroundColor: AppColors.background,
               elevation: 0,
               leading: Builder(
                 builder: (context) => IconButton(
@@ -32,16 +30,12 @@ class MainLayout extends StatelessWidget {
             )
           : null,
 
-      // 3. Desktop Layout: Fixed Sidebar + Child Content
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // The Sidebar (Only one instance!)
           if (!isMobile) const SizedBox(width: 250, child: SideBar()),
-
-          // The Content (Doctor/Nurse Dashboard)
           Expanded(
-            child: child,
+            child: child, // The dashboard content
           ),
         ],
       ),

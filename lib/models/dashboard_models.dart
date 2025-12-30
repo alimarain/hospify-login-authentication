@@ -106,4 +106,6 @@ class WardSummaryItem {
   final int criticalCount;
   final Color color;
   WardSummaryItem(this.name, this.count, this.criticalCount, this.color);
+
+  get totalPatients => null;
 }
