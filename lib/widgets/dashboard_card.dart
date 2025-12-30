@@ -1,6 +1,5 @@
-
 import 'package:flutter/material.dart';
-import 'package:hospify/utils/app_colors%20copy.dart';
+import '../theme/app_theme.dart';
 
 class DashboardCard extends StatelessWidget {
   final String title;
@@ -18,47 +17,51 @@ class DashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.card,
+    // ✅ FIX: Wrapped in Material
+    return Material(
+      color: AppColors.card,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        onTap: () {},
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                          color: AppColors.textSecondary, fontSize: 14),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(icon, color: color, size: 20),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text(
+                value,
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
                 ),
-                child: Icon(icon, color: color, size: 24),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          Text(
-            value,
-            style: const TextStyle(
-              color: AppColors.foreground,
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: const TextStyle(
-              color: AppColors.mutedForeground,
-              fontSize: 14,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
