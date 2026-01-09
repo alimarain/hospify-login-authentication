@@ -448,141 +448,142 @@
 //     );
 //   }
 // }
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../theme/app_theme.dart';
-import '../providers/dashboard_providers.dart';
-// IMPORT YOUR SEPARATE CARD WIDGET HERE:
-import 'ward_card.dart';
 
-class WardSummaryWidget extends ConsumerWidget {
-  const WardSummaryWidget({super.key});
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import '../theme/app_theme.dart';
+// import '../providers/dashboard_providers.dart';
+// // IMPORT YOUR SEPARATE CARD WIDGET HERE:
+// import 'ward_card.dart';
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final wards = ref.watch(wardSummaryProvider);
+// class WardSummaryWidget extends ConsumerWidget {
+//   const WardSummaryWidget({super.key});
 
-    final totalCritical =
-        wards.fold(0, (sum, item) => sum + item.criticalCount);
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final wards = ref.watch(wardSummaryProvider);
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.background, // Matches main background
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // --- Header ---
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Row(
-                children: [
-                  Icon(Icons.people_outline, size: 20, color: Colors.white),
-                  SizedBox(width: 8),
-                  Text(
-                    "Ward Summary",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ],
-              ),
-              InkWell(
-                onTap: () {},
-                child: const Row(
-                  children: [
-                    Text("View All",
-                        style: TextStyle(
-                            color: AppColors.textMuted, fontSize: 13)),
-                    SizedBox(width: 4),
-                    Icon(Icons.chevron_right,
-                        size: 16, color: AppColors.textMuted),
-                  ],
-                ),
-              )
-            ],
-          ),
-          const SizedBox(height: 20),
+//     final totalCritical =
+//         wards.fold(0, (sum, item) => sum + item.criticalCount);
 
-          // --- RESPONSIVE GRID LAYOUT ---
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final double width = constraints.maxWidth;
+//     return Container(
+//       width: double.infinity,
+//       padding: const EdgeInsets.all(20),
+//       decoration: BoxDecoration(
+//         color: AppColors.background, // Matches main background
+//         borderRadius: BorderRadius.circular(12),
+//         border: Border.all(color: AppColors.border),
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           // --- Header ---
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               const Row(
+//                 children: [
+//                   Icon(Icons.people_outline, size: 20, color: Colors.white),
+//                   SizedBox(width: 8),
+//                   Text(
+//                     "Ward Summary",
+//                     style: TextStyle(
+//                         fontSize: 16,
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.white),
+//                   ),
+//                 ],
+//               ),
+//               InkWell(
+//                 onTap: () {},
+//                 child: const Row(
+//                   children: [
+//                     Text("View All",
+//                         style: TextStyle(
+//                             color: AppColors.textMuted, fontSize: 13)),
+//                     SizedBox(width: 4),
+//                     Icon(Icons.chevron_right,
+//                         size: 16, color: AppColors.textMuted),
+//                   ],
+//                 ),
+//               )
+//             ],
+//           ),
+//           const SizedBox(height: 20),
 
-              // Calculate Columns based on screen width
-              int cols;
-              if (width >= 1200) {
-                cols = 6; // Desktop: All 6 in one row
-              } else if (width >= 700) {
-                cols = 3; // Tablet: 3 per row
-              } else {
-                cols = 2; // Mobile: 2 per row
-              }
+//           // --- RESPONSIVE GRID LAYOUT ---
+//           LayoutBuilder(
+//             builder: (context, constraints) {
+//               final double width = constraints.maxWidth;
 
-              // Use GridView to fill exact width
-              return GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: wards.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: cols,
-                  crossAxisSpacing: 12, // Horizontal Gap
-                  mainAxisSpacing: 12, // Vertical Gap
-                  childAspectRatio: 1.8, // Adjust Ratio (Width / Height)
-                ),
-                itemBuilder: (context, index) {
-                  final ward = wards[index];
-                  // Using your separate WardCard class
-                  return WardCard(
-                    name: ward.name,
-                    count: ward.totalPatients,
-                    criticalCount: ward.criticalCount,
-                    color: ward.color,
-                    onTap: () {
-                      // Handle tap
-                    },
-                  );
-                },
-              );
-            },
-          ),
+//               // Calculate Columns based on screen width
+//               int cols;
+//               if (width >= 1200) {
+//                 cols = 6; // Desktop: All 6 in one row
+//               } else if (width >= 700) {
+//                 cols = 3; // Tablet: 3 per row
+//               } else {
+//                 cols = 2; // Mobile: 2 per row
+//               }
 
-          const SizedBox(height: 20),
+//               // Use GridView to fill exact width
+//               return GridView.builder(
+//                 physics: const NeverScrollableScrollPhysics(),
+//                 shrinkWrap: true,
+//                 itemCount: wards.length,
+//                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                   crossAxisCount: cols,
+//                   crossAxisSpacing: 12, // Horizontal Gap
+//                   mainAxisSpacing: 12, // Vertical Gap
+//                   childAspectRatio: 1.8, // Adjust Ratio (Width / Height)
+//                 ),
+//                 itemBuilder: (context, index) {
+//                   final ward = wards[index];
+//                   // Using your separate WardCard class
+//                   return WardCard(
+//                     name: ward.name,
+//                     count: ward.totalPatients,
+//                     criticalCount: ward.criticalCount,
+//                     color: ward.color,
+//                     onTap: () {
+//                       // Handle tap
+//                     },
+//                   );
+//                 },
+//               );
+//             },
+//           ),
 
-          // --- Footer Alert ---
-          if (totalCritical > 0)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: AppColors.criticalBg,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.criticalBorder),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("$totalCritical critical patients across all wards",
-                      style: const TextStyle(
-                          color: AppColors.redAccent,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13)),
-                  const Text("View Details",
-                      style: TextStyle(
-                          color: AppColors.redAccent,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12)),
-                ],
-              ),
-            )
-        ],
-      ),
-    );
-  }
-}
+//           const SizedBox(height: 20),
+
+//           // --- Footer Alert ---
+//           if (totalCritical > 0)
+//             Container(
+//               width: double.infinity,
+//               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+//               decoration: BoxDecoration(
+//                 color: AppColors.criticalBg,
+//                 borderRadius: BorderRadius.circular(8),
+//                 border: Border.all(color: AppColors.criticalBorder),
+//               ),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Text("$totalCritical critical patients across all wards",
+//                       style: const TextStyle(
+//                           color: AppColors.redAccent,
+//                           fontWeight: FontWeight.w500,
+//                           fontSize: 13)),
+//                   const Text("View Details",
+//                       style: TextStyle(
+//                           color: AppColors.redAccent,
+//                           fontWeight: FontWeight.bold,
+//                           fontSize: 12)),
+//                 ],
+//               ),
+//             )
+//         ],
+//       ),
+//     );
+//   }
+// }

@@ -1,39 +1,21 @@
 class VitalSigns {
-  final String bloodPressure;
-  final int heartRate;
-  final double temperature;
-  final int respiratoryRate;
-  final int oxygenSaturation;
-  final double weight;
-  final DateTime lastUpdated;
+  String bloodPressure;
+  String heartRate;
+  String temperature;
+  String respiratoryRate;
+  String oxygenSaturation;
+  String weight;
+  String height;
+  String? lastUpdated;
 
   VitalSigns({
-    required this.bloodPressure,
-    required this.heartRate,
-    required this.temperature,
-    required this.respiratoryRate,
-    required this.oxygenSaturation,
-    required this.weight,
-    required this.lastUpdated,
+    this.bloodPressure = '120/80',
+    this.heartRate = '72',
+    this.temperature = '98.6',
+    this.respiratoryRate = '16',
+    this.oxygenSaturation = '98',
+    this.weight = '70',
+    this.height = '175',
+    this.lastUpdated,
   });
-
-  VitalSigns copyWith({
-    String? bloodPressure,
-    int? heartRate,
-    double? temperature,
-    int? respiratoryRate,
-    int? oxygenSaturation,
-    double? weight,
-    DateTime? lastUpdated,
-  }) {
-    return VitalSigns(
-      bloodPressure: bloodPressure ?? this.bloodPressure,
-      heartRate: heartRate ?? this.heartRate,
-      temperature: temperature ?? this.temperature,
-      respiratoryRate: respiratoryRate ?? this.respiratoryRate,
-      oxygenSaturation: oxygenSaturation ?? this.oxygenSaturation,
-      weight: weight ?? this.weight,
-      lastUpdated: lastUpdated ?? this.lastUpdated,
-    );
-  }
 }

@@ -136,115 +136,116 @@
 //     );
 //   }
 // }
-import 'package:flutter/material.dart';
-import '../utils/responsive_utils.dart';
-import '../models/dashboard_models.dart';
-import '../theme/app_theme.dart';
 
-class SummaryCards extends StatelessWidget {
-  final List<SummaryCardData> data;
-  const SummaryCards({super.key, required this.data});
+// import 'package:flutter/material.dart';
+// import '../utils/responsive_utils.dart';
+// import '../models/dashboard_models.dart';
+// import '../theme/app_theme.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    // Responsive grid counts
-    final crossAxisCount = ResponsiveUtils.isMobile(context)
-        ? 1
-        : ResponsiveUtils.isTablet(context)
-            ? 2
-            : 4;
+// class SummaryCards extends StatelessWidget {
+//   final List<SummaryCardData> data;
+//   const SummaryCards({super.key, required this.data});
 
-    // Cards are wide and short in this design (Icon Left + Text Right)
-    double childAspectRatio = ResponsiveUtils.isMobile(context) ? 2.3 : 2.6;
+//   @override
+//   Widget build(BuildContext context) {
+//     // Responsive grid counts
+//     final crossAxisCount = ResponsiveUtils.isMobile(context)
+//         ? 1
+//         : ResponsiveUtils.isTablet(context)
+//             ? 2
+//             : 4;
 
-    return GridView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: data.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
-        childAspectRatio: childAspectRatio,
-      ),
-      itemBuilder: (context, index) => _SummaryCard(data: data[index]),
-    );
-  }
-}
+//     // Cards are wide and short in this design (Icon Left + Text Right)
+//     double childAspectRatio = ResponsiveUtils.isMobile(context) ? 2.3 : 2.6;
 
-class _SummaryCard extends StatelessWidget {
-  final SummaryCardData data;
-  const _SummaryCard({required this.data});
+//     return GridView.builder(
+//       physics: const NeverScrollableScrollPhysics(),
+//       shrinkWrap: true,
+//       itemCount: data.length,
+//       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//         crossAxisCount: crossAxisCount,
+//         crossAxisSpacing: 20,
+//         mainAxisSpacing: 20,
+//         childAspectRatio: childAspectRatio,
+//       ),
+//       itemBuilder: (context, index) => _SummaryCard(data: data[index]),
+//     );
+//   }
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    // Use the color from data, or fallback to primary accent
-    final accentColor = data.iconColor ?? AppColors.primaryAccent;
+// class _SummaryCard extends StatelessWidget {
+//   final SummaryCardData data;
+//   const _SummaryCard({required this.data});
 
-    return Material(
-      color: AppColors.card, // Dark card background
-      borderRadius: BorderRadius.circular(16), // Rounded corners
-      child: InkWell(
-        onTap: () {},
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // --- 1. Icon Box (Left) ---
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  // Subtle background tint of the icon's color
-                  color: accentColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  data.icon,
-                  color: accentColor,
-                  size: 28,
-                ),
-              ),
+//   @override
+//   Widget build(BuildContext context) {
+//     // Use the color from data, or fallback to primary accent
+//     final accentColor = data.iconColor ?? AppColors.primaryAccent;
 
-              const SizedBox(width: 20),
+//     return Material(
+//       color: AppColors.card, // Dark card background
+//       borderRadius: BorderRadius.circular(16), // Rounded corners
+//       child: InkWell(
+//         onTap: () {},
+//         borderRadius: BorderRadius.circular(16),
+//         child: Padding(
+//           padding: const EdgeInsets.all(24),
+//           child: Row(
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: [
+//               // --- 1. Icon Box (Left) ---
+//               Container(
+//                 width: 56,
+//                 height: 56,
+//                 decoration: BoxDecoration(
+//                   // Subtle background tint of the icon's color
+//                   color: accentColor.withOpacity(0.1),
+//                   borderRadius: BorderRadius.circular(12),
+//                 ),
+//                 child: Icon(
+//                   data.icon,
+//                   color: accentColor,
+//                   size: 28,
+//                 ),
+//               ),
 
-              // --- 2. Text Content (Right) ---
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Big Value
-                    Text(
-                      data.value,
-                      style: const TextStyle(
-                        fontSize: 32, // Large font size matching design
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
-                        height: 1.0, // Tighter line height
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    // Title Label
-                    Text(
-                      data.title,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textSecondary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+//               const SizedBox(width: 20),
+
+//               // --- 2. Text Content (Right) ---
+//               Expanded(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: [
+//                     // Big Value
+//                     Text(
+//                       data.value,
+//                       style: const TextStyle(
+//                         fontSize: 32, // Large font size matching design
+//                         fontWeight: FontWeight.bold,
+//                         color: AppColors.textPrimary,
+//                         height: 1.0, // Tighter line height
+//                       ),
+//                     ),
+//                     const SizedBox(height: 6),
+//                     // Title Label
+//                     Text(
+//                       data.title,
+//                       style: const TextStyle(
+//                         fontSize: 14,
+//                         color: AppColors.textSecondary,
+//                         fontWeight: FontWeight.w500,
+//                       ),
+//                       maxLines: 1,
+//                       overflow: TextOverflow.ellipsis,
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

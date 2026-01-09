@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hospify/utils/app_colors%20copy.dart';
+import 'package:hospify/utils/app_colors copy.dart';
 import '../models/auth_model.dart';
 
-class RoleTab extends StatelessWidget {
+class RoleTab extends StatefulWidget {
   final UserRole role;
   final bool isSelected;
   final VoidCallback onTap;
@@ -18,8 +18,46 @@ class RoleTab extends StatelessWidget {
     required this.label,
   });
 
+  @override
+  State<RoleTab> createState() => _RoleTabState();
+}
+
+class _RoleTabState extends State<RoleTab> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _bounceAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+
+    _bounceAnimation = Tween<double>(begin: 1.0, end: 1.2)
+        .chain(CurveTween(curve: Curves.elasticOut))
+        .animate(_controller);
+  }
+
+  @override
+  void didUpdateWidget(covariant RoleTab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Trigger bounce when tab becomes selected
+    if (widget.isSelected && !oldWidget.isSelected) {
+      _controller.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   Color get _activeColor {
-    switch (role) {
+    switch (widget.role) {
       case UserRole.nurse:
         return AppColors.nurseColor;
       case UserRole.doctor:
@@ -30,7 +68,7 @@ class RoleTab extends StatelessWidget {
   }
 
   Color get _activeBg {
-    switch (role) {
+    switch (widget.role) {
       case UserRole.nurse:
         return AppColors.nurseBg;
       case UserRole.doctor:
@@ -44,30 +82,46 @@ class RoleTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
-        onTap: onTap,
+        onTap: widget.onTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? _activeBg : Colors.transparent,
+            color: widget.isSelected ? _activeBg : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                icon,
-                size: 16,
-                color: isSelected ? _activeColor : AppColors.mutedForeground,
+              ScaleTransition(
+                scale: _bounceAnimation,
+                child: AnimatedSlide(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeInOut,
+                  offset:
+                      widget.isSelected ? const Offset(0, -0.05) : Offset.zero,
+                  child: Icon(
+                    widget.icon,
+                    size: 16,
+                    color: widget.isSelected
+                        ? _activeColor
+                        : AppColors.mutedForeground,
+                  ),
+                ),
               ),
               const SizedBox(width: 8),
-              Text(
-                label,
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOut,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: isSelected ? _activeColor : AppColors.mutedForeground,
+                  color: widget.isSelected
+                      ? _activeColor
+                      : AppColors.mutedForeground,
                 ),
+                child: Text(widget.label),
               ),
             ],
           ),

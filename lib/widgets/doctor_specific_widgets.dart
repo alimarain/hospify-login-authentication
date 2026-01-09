@@ -607,446 +607,447 @@
 //     );
 //   }
 // }
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../theme/app_theme.dart';
-import '../providers/dashboard_providers.dart';
-import '../utils/responsive_utils.dart';
 
-// --- 1. Ward Summary Widget ---
-class WardSummaryWidget extends ConsumerWidget {
-  const WardSummaryWidget({super.key});
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import '../theme/app_theme.dart';
+// import '../providers/dashboard_providers.dart';
+// import '../utils/responsive_utils.dart';
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final wards = ref.watch(wardSummaryProvider);
+// // --- 1. Ward Summary Widget ---
+// class WardSummaryWidget extends ConsumerWidget {
+//   const WardSummaryWidget({super.key});
 
-    return Column(
-      children: [
-        // Header
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Row(
-              children: [
-                Icon(Icons.people_outline,
-                    size: 20, color: AppColors.textPrimary),
-                SizedBox(width: 8),
-                Text(
-                  "Ward Summary",
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary),
-                ),
-              ],
-            ),
-            TextButton(
-              onPressed: () {},
-              child: const Row(
-                children: [
-                  Text("View All",
-                      style: TextStyle(
-                          color: AppColors.textPrimary, fontSize: 14)),
-                  SizedBox(width: 4),
-                  Icon(Icons.chevron_right,
-                      size: 16, color: AppColors.textPrimary),
-                ],
-              ),
-            )
-          ],
-        ),
-        const SizedBox(height: 12),
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final wards = ref.watch(wardSummaryProvider);
 
-        // Cards List
-        SizedBox(
-          height: 100,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: wards.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (context, index) {
-              final ward = wards[index];
-              return Material(
-                color: AppColors.card,
-                borderRadius: BorderRadius.circular(
-                    8), // Slightly sharper corners matching image
-                child: InkWell(
-                  onTap: () {},
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    width: 150, // Wider cards
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                          color:
-                              Colors.white.withOpacity(0.05)), // Subtle border
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                                radius: 4, backgroundColor: ward.color),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                ward.name,
-                                style: const TextStyle(
-                                    fontSize: 13,
-                                    color: AppColors.textSecondary),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            if (ward.criticalCount > 0)
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 2),
-                                decoration: const BoxDecoration(
-                                    color: AppColors.redAccent,
-                                    shape: BoxShape.circle),
-                                child: Text("${ward.criticalCount}",
-                                    style: const TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold)),
-                              )
-                          ],
-                        ),
-                        Text("${ward.count}",
-                            style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.textPrimary)),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 12),
+//     return Column(
+//       children: [
+//         // Header
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: [
+//             const Row(
+//               children: [
+//                 Icon(Icons.people_outline,
+//                     size: 20, color: AppColors.textPrimary),
+//                 SizedBox(width: 8),
+//                 Text(
+//                   "Ward Summary",
+//                   style: TextStyle(
+//                       fontSize: 16,
+//                       fontWeight: FontWeight.bold,
+//                       color: AppColors.textPrimary),
+//                 ),
+//               ],
+//             ),
+//             TextButton(
+//               onPressed: () {},
+//               child: const Row(
+//                 children: [
+//                   Text("View All",
+//                       style: TextStyle(
+//                           color: AppColors.textPrimary, fontSize: 14)),
+//                   SizedBox(width: 4),
+//                   Icon(Icons.chevron_right,
+//                       size: 16, color: AppColors.textPrimary),
+//                 ],
+//               ),
+//             )
+//           ],
+//         ),
+//         const SizedBox(height: 12),
 
-        // Critical Alert Bar
-        Material(
-          color: AppColors.redAccent.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-          child: InkWell(
-            onTap: () {},
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.redAccent.withOpacity(0.3)),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("3 critical patients across all wards",
-                      style: TextStyle(
-                          color: AppColors.redAccent,
-                          fontWeight: FontWeight.w500)),
-                  Text("View Details",
-                      style: TextStyle(
-                          color: AppColors.redAccent,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12)),
-                ],
-              ),
-            ),
-          ),
-        )
-      ],
-    );
-  }
-}
+//         // Cards List
+//         SizedBox(
+//           height: 100,
+//           child: ListView.separated(
+//             scrollDirection: Axis.horizontal,
+//             itemCount: wards.length,
+//             separatorBuilder: (_, __) => const SizedBox(width: 12),
+//             itemBuilder: (context, index) {
+//               final ward = wards[index];
+//               return Material(
+//                 color: AppColors.card,
+//                 borderRadius: BorderRadius.circular(
+//                     8), // Slightly sharper corners matching image
+//                 child: InkWell(
+//                   onTap: () {},
+//                   borderRadius: BorderRadius.circular(8),
+//                   child: Container(
+//                     width: 150, // Wider cards
+//                     padding: const EdgeInsets.all(16),
+//                     decoration: BoxDecoration(
+//                       borderRadius: BorderRadius.circular(8),
+//                       border: Border.all(
+//                           color:
+//                               Colors.white.withOpacity(0.05)), // Subtle border
+//                     ),
+//                     child: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: [
+//                         Row(
+//                           children: [
+//                             CircleAvatar(
+//                                 radius: 4, backgroundColor: ward.color),
+//                             const SizedBox(width: 8),
+//                             Expanded(
+//                               child: Text(
+//                                 ward.name,
+//                                 style: const TextStyle(
+//                                     fontSize: 13,
+//                                     color: AppColors.textSecondary),
+//                                 overflow: TextOverflow.ellipsis,
+//                               ),
+//                             ),
+//                             if (ward.criticalCount > 0)
+//                               Container(
+//                                 padding: const EdgeInsets.symmetric(
+//                                     horizontal: 6, vertical: 2),
+//                                 decoration: const BoxDecoration(
+//                                     color: AppColors.redAccent,
+//                                     shape: BoxShape.circle),
+//                                 child: Text("${ward.criticalCount}",
+//                                     style: const TextStyle(
+//                                         fontSize: 10,
+//                                         color: Colors.white,
+//                                         fontWeight: FontWeight.bold)),
+//                               )
+//                           ],
+//                         ),
+//                         Text("${ward.count}",
+//                             style: const TextStyle(
+//                                 fontSize: 24,
+//                                 fontWeight: FontWeight.bold,
+//                                 color: AppColors.textPrimary)),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               );
+//             },
+//           ),
+//         ),
+//         const SizedBox(height: 12),
 
-// --- 2. Doctor Tasks Widget ---
-class DoctorTasksWidget extends ConsumerWidget {
-  const DoctorTasksWidget({super.key});
+//         // Critical Alert Bar
+//         Material(
+//           color: AppColors.redAccent.withOpacity(0.1),
+//           borderRadius: BorderRadius.circular(8),
+//           child: InkWell(
+//             onTap: () {},
+//             borderRadius: BorderRadius.circular(8),
+//             child: Container(
+//               width: double.infinity,
+//               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+//               decoration: BoxDecoration(
+//                 borderRadius: BorderRadius.circular(8),
+//                 border: Border.all(color: AppColors.redAccent.withOpacity(0.3)),
+//               ),
+//               child: const Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Text("3 critical patients across all wards",
+//                       style: TextStyle(
+//                           color: AppColors.redAccent,
+//                           fontWeight: FontWeight.w500)),
+//                   Text("View Details",
+//                       style: TextStyle(
+//                           color: AppColors.redAccent,
+//                           fontWeight: FontWeight.bold,
+//                           fontSize: 12)),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         )
+//       ],
+//     );
+//   }
+// }
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final tasks = ref.watch(doctorTasksProvider);
-    final pending = tasks.where((t) => !t.isCompleted).toList();
-    final completed = tasks.where((t) => t.isCompleted).toList();
+// // --- 2. Doctor Tasks Widget ---
+// class DoctorTasksWidget extends ConsumerWidget {
+//   const DoctorTasksWidget({super.key});
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Row(
-          children: [
-            Icon(Icons.check_circle_outline, color: Colors.grey, size: 20),
-            SizedBox(width: 8),
-            Text("Today's Tasks",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary)),
-          ],
-        ),
-        Text("${pending.length} pending • ${completed.length} completed",
-            style:
-                const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
-        const SizedBox(height: 16),
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final tasks = ref.watch(doctorTasksProvider);
+//     final pending = tasks.where((t) => !t.isCompleted).toList();
+//     final completed = tasks.where((t) => t.isCompleted).toList();
 
-        // Task Grid
-        Wrap(
-          spacing: 16,
-          runSpacing: 16,
-          children: pending
-              .map((task) => _buildTaskCard(context, ref, task))
-              .toList(),
-        ),
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         const Row(
+//           children: [
+//             Icon(Icons.check_circle_outline, color: Colors.grey, size: 20),
+//             SizedBox(width: 8),
+//             Text("Today's Tasks",
+//                 style: TextStyle(
+//                     fontSize: 18,
+//                     fontWeight: FontWeight.bold,
+//                     color: AppColors.textPrimary)),
+//           ],
+//         ),
+//         Text("${pending.length} pending • ${completed.length} completed",
+//             style:
+//                 const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+//         const SizedBox(height: 16),
 
-        if (completed.isNotEmpty) ...[
-          const SizedBox(height: 24),
-          const Text("Completed",
-              style: TextStyle(color: AppColors.textSecondary)),
-          const SizedBox(height: 8),
-          ...completed.map((task) => _buildCompletedRow(context, ref, task)),
-        ]
-      ],
-    );
-  }
+//         // Task Grid
+//         Wrap(
+//           spacing: 16,
+//           runSpacing: 16,
+//           children: pending
+//               .map((task) => _buildTaskCard(context, ref, task))
+//               .toList(),
+//         ),
 
-  Widget _buildTaskCard(BuildContext context, WidgetRef ref, dynamic task) {
-    final width = ResponsiveUtils.isDesktop(context) ? 350.0 : double.infinity;
+//         if (completed.isNotEmpty) ...[
+//           const SizedBox(height: 24),
+//           const Text("Completed",
+//               style: TextStyle(color: AppColors.textSecondary)),
+//           const SizedBox(height: 8),
+//           ...completed.map((task) => _buildCompletedRow(context, ref, task)),
+//         ]
+//       ],
+//     );
+//   }
 
-    return Material(
-      color: AppColors.card, // Dark card
-      borderRadius: BorderRadius.circular(10),
-      child: InkWell(
-        onTap: () {},
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          width: width,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            // No border or very subtle one
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Radio Button
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  customBorder: const CircleBorder(),
-                  onTap: () => ref
-                      .read(doctorTasksProvider.notifier)
-                      .toggleTask(task.id),
-                  child: Container(
-                    width: 22,
-                    height: 22,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.grey, width: 1),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(task.title,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
-                            fontSize: 14)),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        const Icon(Icons.access_time,
-                            size: 14, color: Colors.grey),
-                        const SizedBox(width: 6),
-                        Text(task.time,
-                            style: const TextStyle(
-                                color: Colors.grey, fontSize: 12)),
-                        const SizedBox(width: 12),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: _getPriorityColor(task.priority)
-                                .withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(task.priority,
-                              style: TextStyle(
-                                  color: _getPriorityColor(task.priority),
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold)),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+//   Widget _buildTaskCard(BuildContext context, WidgetRef ref, dynamic task) {
+//     final width = ResponsiveUtils.isDesktop(context) ? 350.0 : double.infinity;
 
-  Widget _buildCompletedRow(BuildContext context, WidgetRef ref, dynamic task) {
-    return Material(
-      color: AppColors.card.withOpacity(0.4),
-      borderRadius: BorderRadius.circular(8),
-      child: InkWell(
-        onTap: () => ref.read(doctorTasksProvider.notifier).toggleTask(task.id),
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          child: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.grey, size: 20),
-              const SizedBox(width: 12),
-              Expanded(
-                  child: Text(task.title,
-                      style: const TextStyle(
-                          color: Colors.grey,
-                          decoration: TextDecoration.lineThrough))),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+//     return Material(
+//       color: AppColors.card, // Dark card
+//       borderRadius: BorderRadius.circular(10),
+//       child: InkWell(
+//         onTap: () {},
+//         borderRadius: BorderRadius.circular(10),
+//         child: Container(
+//           width: width,
+//           padding: const EdgeInsets.all(16),
+//           decoration: BoxDecoration(
+//             borderRadius: BorderRadius.circular(10),
+//             // No border or very subtle one
+//           ),
+//           child: Row(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               // Radio Button
+//               Material(
+//                 color: Colors.transparent,
+//                 child: InkWell(
+//                   customBorder: const CircleBorder(),
+//                   onTap: () => ref
+//                       .read(doctorTasksProvider.notifier)
+//                       .toggleTask(task.id),
+//                   child: Container(
+//                     width: 22,
+//                     height: 22,
+//                     decoration: BoxDecoration(
+//                       shape: BoxShape.circle,
+//                       border: Border.all(color: Colors.grey, width: 1),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//               const SizedBox(width: 16),
+//               Expanded(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(task.title,
+//                         style: const TextStyle(
+//                             fontWeight: FontWeight.w600,
+//                             color: AppColors.textPrimary,
+//                             fontSize: 14)),
+//                     const SizedBox(height: 10),
+//                     Row(
+//                       children: [
+//                         const Icon(Icons.access_time,
+//                             size: 14, color: Colors.grey),
+//                         const SizedBox(width: 6),
+//                         Text(task.time,
+//                             style: const TextStyle(
+//                                 color: Colors.grey, fontSize: 12)),
+//                         const SizedBox(width: 12),
+//                         Container(
+//                           padding: const EdgeInsets.symmetric(
+//                               horizontal: 8, vertical: 4),
+//                           decoration: BoxDecoration(
+//                             color: _getPriorityColor(task.priority)
+//                                 .withOpacity(0.2),
+//                             borderRadius: BorderRadius.circular(4),
+//                           ),
+//                           child: Text(task.priority,
+//                               style: TextStyle(
+//                                   color: _getPriorityColor(task.priority),
+//                                   fontSize: 10,
+//                                   fontWeight: FontWeight.bold)),
+//                         )
+//                       ],
+//                     )
+//                   ],
+//                 ),
+//               )
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
 
-  Color _getPriorityColor(String priority) {
-    switch (priority.toLowerCase()) {
-      case 'high':
-        return AppColors.redAccent;
-      case 'medium':
-        return AppColors.orangeAccent;
-      default:
-        return AppColors.secondaryAccent;
-    }
-  }
-}
+//   Widget _buildCompletedRow(BuildContext context, WidgetRef ref, dynamic task) {
+//     return Material(
+//       color: AppColors.card.withOpacity(0.4),
+//       borderRadius: BorderRadius.circular(8),
+//       child: InkWell(
+//         onTap: () => ref.read(doctorTasksProvider.notifier).toggleTask(task.id),
+//         borderRadius: BorderRadius.circular(8),
+//         child: Padding(
+//           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+//           child: Row(
+//             children: [
+//               const Icon(Icons.check_circle, color: Colors.grey, size: 20),
+//               const SizedBox(width: 12),
+//               Expanded(
+//                   child: Text(task.title,
+//                       style: const TextStyle(
+//                           color: Colors.grey,
+//                           decoration: TextDecoration.lineThrough))),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
 
-// --- 3. Appointments Widget ---
-class AppointmentsWidget extends ConsumerWidget {
-  const AppointmentsWidget({super.key});
+//   Color _getPriorityColor(String priority) {
+//     switch (priority.toLowerCase()) {
+//       case 'high':
+//         return AppColors.redAccent;
+//       case 'medium':
+//         return AppColors.orangeAccent;
+//       default:
+//         return AppColors.secondaryAccent;
+//     }
+//   }
+// }
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final appts = ref.watch(appointmentsProvider);
+// // --- 3. Appointments Widget ---
+// class AppointmentsWidget extends ConsumerWidget {
+//   const AppointmentsWidget({super.key});
 
-    return Material(
-      color: const Color(0xFF111111), // Very dark background per image
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Today's Appointments",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white)),
-                Row(
-                  children: [
-                    Text("${appts.length} scheduled",
-                        style:
-                            const TextStyle(color: Colors.grey, fontSize: 13)),
-                    const SizedBox(width: 12),
-                    ElevatedButton.icon(
-                      onPressed: () {},
-                      icon:
-                          const Icon(Icons.add, size: 16, color: Colors.white),
-                      label: const Text("Add",
-                          style: TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.card,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
-            const SizedBox(height: 24),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: appts.length,
-              separatorBuilder: (_, __) =>
-                  Divider(color: Colors.grey.withOpacity(0.1), height: 24),
-              itemBuilder: (context, index) {
-                final appt = appts[index];
-                return Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.grey.shade800,
-                      child: const Icon(Icons.person,
-                          color: Colors.white70, size: 20),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(appt.name,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: Colors.white)),
-                          const SizedBox(height: 4),
-                          Text(appt.type,
-                              style: const TextStyle(
-                                  color: Colors.grey, fontSize: 13)),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(appt.time,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            const Icon(Icons.access_time,
-                                size: 12, color: Colors.grey),
-                            const SizedBox(width: 4),
-                            Text(appt.duration,
-                                style: const TextStyle(
-                                    color: Colors.grey, fontSize: 12)),
-                          ],
-                        )
-                      ],
-                    ),
-                    const SizedBox(width: 16),
-                    const Icon(Icons.more_vert, color: Colors.grey, size: 18),
-                  ],
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final appts = ref.watch(appointmentsProvider);
+
+//     return Material(
+//       color: const Color(0xFF111111), // Very dark background per image
+//       borderRadius: BorderRadius.circular(16),
+//       child: Container(
+//         padding: const EdgeInsets.all(24),
+//         child: Column(
+//           children: [
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 const Text("Today's Appointments",
+//                     style: TextStyle(
+//                         fontSize: 18,
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.white)),
+//                 Row(
+//                   children: [
+//                     Text("${appts.length} scheduled",
+//                         style:
+//                             const TextStyle(color: Colors.grey, fontSize: 13)),
+//                     const SizedBox(width: 12),
+//                     ElevatedButton.icon(
+//                       onPressed: () {},
+//                       icon:
+//                           const Icon(Icons.add, size: 16, color: Colors.white),
+//                       label: const Text("Add",
+//                           style: TextStyle(color: Colors.white)),
+//                       style: ElevatedButton.styleFrom(
+//                         backgroundColor: AppColors.card,
+//                         foregroundColor: Colors.white,
+//                         padding: const EdgeInsets.symmetric(
+//                             horizontal: 16, vertical: 10),
+//                         shape: RoundedRectangleBorder(
+//                             borderRadius: BorderRadius.circular(8)),
+//                       ),
+//                     )
+//                   ],
+//                 )
+//               ],
+//             ),
+//             const SizedBox(height: 24),
+//             ListView.separated(
+//               shrinkWrap: true,
+//               physics: const NeverScrollableScrollPhysics(),
+//               itemCount: appts.length,
+//               separatorBuilder: (_, __) =>
+//                   Divider(color: Colors.grey.withOpacity(0.1), height: 24),
+//               itemBuilder: (context, index) {
+//                 final appt = appts[index];
+//                 return Row(
+//                   children: [
+//                     CircleAvatar(
+//                       radius: 20,
+//                       backgroundColor: Colors.grey.shade800,
+//                       child: const Icon(Icons.person,
+//                           color: Colors.white70, size: 20),
+//                     ),
+//                     const SizedBox(width: 16),
+//                     Expanded(
+//                       child: Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Text(appt.name,
+//                               style: const TextStyle(
+//                                   fontWeight: FontWeight.bold,
+//                                   fontSize: 15,
+//                                   color: Colors.white)),
+//                           const SizedBox(height: 4),
+//                           Text(appt.type,
+//                               style: const TextStyle(
+//                                   color: Colors.grey, fontSize: 13)),
+//                         ],
+//                       ),
+//                     ),
+//                     Column(
+//                       crossAxisAlignment: CrossAxisAlignment.end,
+//                       children: [
+//                         Text(appt.time,
+//                             style: const TextStyle(
+//                                 fontWeight: FontWeight.bold,
+//                                 color: Colors.white)),
+//                         const SizedBox(height: 4),
+//                         Row(
+//                           children: [
+//                             const Icon(Icons.access_time,
+//                                 size: 12, color: Colors.grey),
+//                             const SizedBox(width: 4),
+//                             Text(appt.duration,
+//                                 style: const TextStyle(
+//                                     color: Colors.grey, fontSize: 12)),
+//                           ],
+//                         )
+//                       ],
+//                     ),
+//                     const SizedBox(width: 16),
+//                     const Icon(Icons.more_vert, color: Colors.grey, size: 18),
+//                   ],
+//                 );
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
