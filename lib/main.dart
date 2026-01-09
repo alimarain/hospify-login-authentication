@@ -306,8 +306,7 @@ class Hospify extends ConsumerWidget {
     return MaterialApp(
       title: 'Hospify',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: AppTheme.lightTheme, // Light theme
       themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
       home: const AuthScreen(),
     );

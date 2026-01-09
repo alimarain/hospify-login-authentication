@@ -367,74 +367,167 @@
 //     );
 //   }
 // }
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Status colors
-  static const Color statusStable = Color(0xFF2A9D8F);
-  static const Color statusCritical = Color(0xFFE63946);
-  static const Color statusMild = Color(0xFF4A90D9);
+  // -----------------------------------------------------------------------------
+  // 01. BRAND & PRIMARY COLORS
+  // -----------------------------------------------------------------------------
+  static const Color primaryBlue = Color(0xFF3B82F6); // Vibrant Blue
+  static const Color primaryDark =
+      Color(0xFF1E293B); // Dark Slate (Text/Headers)
+  static const Color background = Color(0xFFF8FAFC); // Light Grey Background
+  static const Color surface = Colors.white;
 
-  // Gradient colors
+  // -----------------------------------------------------------------------------
+  // 02. DASHBOARD GRADIENTS (Matches the screenshot widgets)
+  // -----------------------------------------------------------------------------
   static const Color statsBlueStart = Color(0xFF3B82F6);
-  static const Color statsBlueEnd = Color(0xFF6366F1);
+  static const Color statsBlueEnd = Color(0xFF2563EB);
+
   static const Color statsPinkStart = Color(0xFFEC4899);
   static const Color statsPinkEnd = Color(0xFFDB2777);
-  static const Color statsCyanStart = Color(0xFF14B8A6);
-  static const Color statsCyanEnd = Color(0xFF06B6D4);
+
+  static const Color statsCyanStart = Color(0xFF06B6D4);
+  static const Color statsCyanEnd = Color(0xFF0891B2);
+
+  // -----------------------------------------------------------------------------
+  // 03. WARD / SIDEBAR COLORS (Dark Theme Area)
+  // -----------------------------------------------------------------------------
+  static const Color wardBackground = Color(0xFF0F172A); // The dark sidebar bg
+  static const Color wardSurface =
+      Color(0xFF1E293B); // Lighter dark for cards in sidebar
+  static const Color wardText = Colors.white;
+
+  // -----------------------------------------------------------------------------
+  // 04. STATUS COLORS
+  // -----------------------------------------------------------------------------
+  static const Color statusStable = Color(0xFF10B981); // Green
+  static const Color statusCritical = Color(0xFFEF4444); // Red
+  static const Color statusMild = Color(0xFF3B82F6); // Blue
+  static const Color statusWarning = Color(0xFFF59E0B); // Orange
+
+  // -----------------------------------------------------------------------------
+  // 05. UI NEUTRALS
+  // -----------------------------------------------------------------------------
+  static const Color textPrimary = Color(0xFF0F172A);
+  static const Color textSecondary = Color(0xFF64748B);
+  static const Color dividerColor = Color(0xFFE2E8F0);
+  static const Color inputFill = Color(0xFFF1F5F9);
 
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      scaffoldBackgroundColor: const Color(0xFFFCFAF8),
+      scaffoldBackgroundColor: background,
+      fontFamily: GoogleFonts.inter().fontFamily,
+
       colorScheme: const ColorScheme.light(
-        primary: Color(0xFF1E293B),
-        secondary: Color(0xFFF1F5F9),
-        surface: Colors.white,
-        error: Color(0xFFE63946),
+        primary: primaryBlue,
+        secondary: primaryDark,
+        surface: surface,
+        background: background,
+        error: statusCritical,
+        onPrimary: Colors.white,
+        onSurface: textPrimary,
       ),
-      textTheme: GoogleFonts.interTextTheme(),
+
+      // Typography - Updated to match the clean dashboard look
+      textTheme: GoogleFonts.interTextTheme().copyWith(
+        displayLarge:
+            const TextStyle(color: textPrimary, fontWeight: FontWeight.bold),
+        titleLarge: const TextStyle(
+            color: textPrimary, fontWeight: FontWeight.w700, fontSize: 20),
+        titleMedium: const TextStyle(
+            color: textPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+        bodyLarge: const TextStyle(color: textPrimary, fontSize: 15),
+        bodyMedium: const TextStyle(color: textSecondary, fontSize: 14),
+      ),
+
+      // -------------------------------------------------------------------------
+      // PRESERVED CARD THEME (As requested)
+      // -------------------------------------------------------------------------
       cardTheme: CardTheme(
-        elevation: 0,
+        color: surface,
+        elevation: 1.5,
+        shadowColor: Colors.black.withOpacity(0.04),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: Colors.grey.shade200),
+          borderRadius: BorderRadius.circular(14),
+          side: const BorderSide(color: dividerColor),
         ),
       ),
+
+      // AppBar styling
       appBarTheme: AppBarTheme(
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF1E293B),
+        backgroundColor: background, // Blends into background like the design
+        foregroundColor: textPrimary,
+        centerTitle: false,
         titleTextStyle: GoogleFonts.inter(
-          fontSize: 18,
+          fontSize: 20,
           fontWeight: FontWeight.w600,
-          color: const Color(0xFF1E293B),
+          color: textPrimary,
         ),
+        iconTheme: const IconThemeData(color: textSecondary),
       ),
-    );
-  }
 
-  static ThemeData get darkTheme {
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: const Color(0xFF0F172A),
-      colorScheme: const ColorScheme.dark(
-        primary: Color(0xFFF8FAFC),
-        secondary: Color(0xFF1E293B),
-        surface: Color(0xFF1E293B),
-        error: Color(0xFFE63946),
+      // Divider
+      dividerTheme: const DividerThemeData(
+        color: dividerColor,
+        thickness: 1,
       ),
-      textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
-      cardTheme: CardTheme(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
+
+      // Input fields (Updated to be cleaner/lighter)
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor:
+            surface, // White background often looks cleaner on grey dashboards
+        hoverColor: Colors.white,
+        border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(color: Color(0xFF334155)),
+          borderSide: BorderSide.none,
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.transparent),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: primaryBlue, width: 1.5),
+        ),
+        hintStyle: const TextStyle(color: textSecondary),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        prefixIconColor: textSecondary,
+      ),
+
+      // Buttons
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryBlue,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+          ),
+        ),
+      ),
+
+      // Chips / badges
+      chipTheme: ChipThemeData(
+        backgroundColor: inputFill,
+        labelStyle:
+            const TextStyle(color: textPrimary, fontWeight: FontWeight.w500),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        side: BorderSide.none,
       ),
     );
   }

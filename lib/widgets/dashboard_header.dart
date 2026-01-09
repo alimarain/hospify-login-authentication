@@ -288,12 +288,14 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../models/app_notification.dart';
 import '../providers/notifications_provider.dart';
 import '../utils/responsive_utils.dart';
 import '../models/auth_model.dart';
 import '../providers/auth_provider.dart';
+import '../theme/app_theme.dart'; // Ensure this import points to your AppTheme file
 
 final searchQueryProvider = StateProvider<String>((ref) => "");
 
@@ -329,9 +331,10 @@ class _DashboardHeaderState extends ConsumerState<DashboardHeader>
           parent: _badgeAnimationController, curve: Curves.easeInOut),
     );
 
+    // Pulse between Critical Red and a slightly lighter red
     _badgeColorAnimation = ColorTween(
-      begin: Colors.redAccent,
-      end: Colors.red.shade700,
+      begin: AppTheme.statusCritical,
+      end: const Color(0xFFFF5A5F),
     ).animate(
       CurvedAnimation(
           parent: _badgeAnimationController, curve: Curves.easeInOut),
@@ -347,7 +350,6 @@ class _DashboardHeaderState extends ConsumerState<DashboardHeader>
 
   void _showNotificationsOverlay(BuildContext context) {
     final overlay = Overlay.of(context);
-    final theme = Theme.of(context);
 
     late OverlayEntry entry;
     entry = OverlayEntry(
@@ -360,7 +362,7 @@ class _DashboardHeaderState extends ConsumerState<DashboardHeader>
               Positioned(
                 top: 70,
                 right: 20,
-                width: 320,
+                width: 360, // Slightly wider for better readability
                 child: Material(
                   color: Colors.transparent,
                   child: _AnimatedDropdown(
@@ -372,13 +374,14 @@ class _DashboardHeaderState extends ConsumerState<DashboardHeader>
 
                         return Container(
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.surface,
-                            borderRadius: BorderRadius.circular(14),
+                            color: AppTheme.surface,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: AppTheme.dividerColor),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.15),
-                                blurRadius: 20,
-                                offset: const Offset(0, 10),
+                                color: Colors.black.withOpacity(0.08),
+                                blurRadius: 24,
+                                offset: const Offset(0, 12),
                               ),
                             ],
                           ),
@@ -387,44 +390,60 @@ class _DashboardHeaderState extends ConsumerState<DashboardHeader>
                             children: [
                               // Header
                               Padding(
-                                padding: const EdgeInsets.all(14),
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 16, 20, 12),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Notifications",
-                                      style: theme.textTheme.titleMedium
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.bold),
+                                      style: GoogleFonts.inter(
+                                        color: AppTheme.textPrimary,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                     if (unreadCount > 0)
-                                      TextButton.icon(
+                                      TextButton(
                                         onPressed: () {
                                           ref
                                               .read(notificationsProvider
                                                   .notifier)
                                               .markAllAsRead();
                                         },
-                                        icon: const Icon(Icons.done_all,
-                                            size: 16),
-                                        label: const Text("Mark all"),
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: AppTheme.primaryBlue,
+                                          padding: EdgeInsets.zero,
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                        ),
+                                        child: const Text("Mark all read",
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600)),
                                       ),
                                   ],
                                 ),
                               ),
-                              const Divider(height: 1),
+                              const Divider(
+                                  height: 1, color: AppTheme.dividerColor),
                               // Notifications List
                               ConstrainedBox(
                                 constraints:
-                                    const BoxConstraints(maxHeight: 300),
+                                    const BoxConstraints(maxHeight: 350),
                                 child: notifications.isEmpty
-                                    ? _emptyNotifications(theme)
+                                    ? _emptyNotifications()
                                     : ListView.separated(
                                         shrinkWrap: true,
                                         itemCount: notifications.length,
+                                        padding: EdgeInsets.zero,
                                         separatorBuilder: (_, __) =>
-                                            const Divider(height: 1),
+                                            const Divider(
+                                                height: 1,
+                                                indent: 20,
+                                                endIndent: 20,
+                                                color: AppTheme.dividerColor),
                                         itemBuilder: (context, index) {
                                           final n = notifications[index];
                                           return InkWell(
@@ -434,22 +453,30 @@ class _DashboardHeaderState extends ConsumerState<DashboardHeader>
                                                       .notifier)
                                                   .markAsRead(n.id);
                                             },
-                                            child: _dropdownNotificationTile(
-                                                theme, n),
+                                            child: _dropdownNotificationTile(n),
                                           );
                                         },
                                       ),
                               ),
-                              const Divider(height: 1),
+                              const Divider(
+                                  height: 1, color: AppTheme.dividerColor),
                               // Footer
-                              TextButton(
-                                onPressed: () {
-                                  ref
-                                      .read(notificationsProvider.notifier)
-                                      .clearAll();
-                                  entry.remove();
-                                },
-                                child: const Text("Clear all notifications"),
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(8),
+                                child: TextButton(
+                                  onPressed: () {
+                                    ref
+                                        .read(notificationsProvider.notifier)
+                                        .clearAll();
+                                    entry.remove();
+                                  },
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: AppTheme.textSecondary,
+                                  ),
+                                  child: const Text("Clear all notifications",
+                                      style: TextStyle(fontSize: 13)),
+                                ),
                               ),
                             ],
                           ),
@@ -471,6 +498,7 @@ class _DashboardHeaderState extends ConsumerState<DashboardHeader>
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);
+    // ignore: unused_local_variable
     final isMobile = ResponsiveUtils.isMobile(context);
 
     Widget searchBar() {
@@ -480,12 +508,17 @@ class _DashboardHeaderState extends ConsumerState<DashboardHeader>
           onChanged: (value) {
             ref.read(searchQueryProvider.notifier).state = value;
           },
+          style: const TextStyle(color: AppTheme.textPrimary),
           decoration: InputDecoration(
-            hintText: "Search patients by name, diagnosis, bed, or ward...",
-            prefixIcon: const Icon(Icons.search, color: Colors.grey),
+            hintText: "Search patients, diagnosis, or ward...",
+            hintStyle:
+                const TextStyle(color: AppTheme.textSecondary, fontSize: 14),
+            prefixIcon: const Icon(Icons.search,
+                color: AppTheme.textSecondary, size: 20),
             suffixIcon: _searchController.text.isNotEmpty
                 ? IconButton(
-                    icon: const Icon(Icons.clear, color: Colors.grey),
+                    icon: const Icon(Icons.clear,
+                        color: AppTheme.textSecondary, size: 18),
                     onPressed: () {
                       _searchController.clear();
                       ref.read(searchQueryProvider.notifier).state = '';
@@ -493,10 +526,15 @@ class _DashboardHeaderState extends ConsumerState<DashboardHeader>
                   )
                 : null,
             filled: true,
-            fillColor: Colors.grey.shade100,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide.none,
+            fillColor: AppTheme.surface, // Clean white search bar
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.transparent),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide:
+                  const BorderSide(color: AppTheme.primaryBlue, width: 1.5),
             ),
             contentPadding: const EdgeInsets.symmetric(vertical: 14),
           ),
@@ -512,27 +550,48 @@ class _DashboardHeaderState extends ConsumerState<DashboardHeader>
         onEnter: (_) => setState(() => _isProfileHovered = true),
         onExit: (_) => setState(() => _isProfileHovered = false),
         child: AnimatedScale(
-          scale: _isProfileHovered ? 1.03 : 1.0,
+          scale: _isProfileHovered ? 1.02 : 1.0,
           duration: const Duration(milliseconds: 200),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.purple,
-                radius: 18,
-                child: Text(userName[0],
-                    style: const TextStyle(color: Colors.white)),
-              ),
-              const SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(userName,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                  Text(userRole,
-                      style: TextStyle(color: Colors.grey[400], fontSize: 12)),
-                ],
-              ),
-            ],
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppTheme.surface,
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: AppTheme.dividerColor),
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: AppTheme.primaryBlue,
+                  radius: 16,
+                  child: Text(
+                    userName.isNotEmpty ? userName[0].toUpperCase() : "U",
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(userName,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.textPrimary,
+                            fontSize: 13)),
+                    Text(userRole,
+                        style: const TextStyle(
+                            color: AppTheme.textSecondary, fontSize: 11)),
+                  ],
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.keyboard_arrow_down,
+                    size: 16, color: AppTheme.textSecondary)
+              ],
+            ),
           ),
         ),
       );
@@ -547,33 +606,46 @@ class _DashboardHeaderState extends ConsumerState<DashboardHeader>
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            IconButton(
-              icon: const Icon(Icons.notifications_none, size: 28),
-              onPressed: () => _showNotificationsOverlay(context),
+            Container(
+              decoration: BoxDecoration(
+                  color: AppTheme.surface,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppTheme.dividerColor)),
+              child: IconButton(
+                icon: const Icon(Icons.notifications_none_rounded, size: 22),
+                color: _isNotificationsHovered
+                    ? AppTheme.primaryBlue
+                    : AppTheme.textSecondary,
+                onPressed: () => _showNotificationsOverlay(context),
+              ),
             ),
             if (unread > 0)
               Positioned(
-                right: 0,
-                top: 0,
+                right: 2,
+                top: 2,
                 child: AnimatedBuilder(
                   animation: _badgeAnimationController,
                   builder: (context, child) {
                     return Transform.scale(
                       scale: _isNotificationsHovered
-                          ? 1.3
+                          ? 1.1
                           : _badgeScaleAnimation.value,
                       child: Container(
-                        padding: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: _badgeColorAnimation.value,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Text(
-                          unread.toString(),
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold),
+                            color: _badgeColorAnimation.value,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2)),
+                        constraints:
+                            const BoxConstraints(minWidth: 18, minHeight: 18),
+                        child: Center(
+                          child: Text(
+                            unread > 9 ? "9+" : unread.toString(),
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 9,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     );
@@ -586,13 +658,14 @@ class _DashboardHeaderState extends ConsumerState<DashboardHeader>
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      color: Colors.transparent,
       child: Row(
         children: [
           searchBar(),
-          const SizedBox(width: 16),
+          const SizedBox(width: 20),
           notifications(),
-          const SizedBox(width: 12),
+          const SizedBox(width: 16),
           profileInfo(),
         ],
       ),
@@ -624,10 +697,11 @@ class _AnimatedDropdownState extends State<_AnimatedDropdown>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 180));
+        vsync: this, duration: const Duration(milliseconds: 200));
     _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
     _slide = Tween<Offset>(begin: const Offset(0, -0.05), end: Offset.zero)
-        .animate(_fade);
+        .animate(
+            CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
     _controller.forward();
   }
 
@@ -648,39 +722,51 @@ class _AnimatedDropdownState extends State<_AnimatedDropdown>
 String _formatTime(DateTime timestamp) {
   final now = DateTime.now();
   final difference = now.difference(timestamp);
-  if (difference.inSeconds < 60) return "${difference.inSeconds}s ago";
+  if (difference.inSeconds < 60) return "Just now";
   if (difference.inMinutes < 60) return "${difference.inMinutes}m ago";
   if (difference.inHours < 24) return "${difference.inHours}h ago";
   if (difference.inDays < 7) return "${difference.inDays}d ago";
-  return DateFormat.yMMMd().add_jm().format(timestamp);
+  return DateFormat.MMMd().format(timestamp);
 }
 
-Widget _dropdownNotificationTile(ThemeData theme, AppNotification n) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+Widget _dropdownNotificationTile(AppNotification n) {
+  return Container(
+    color:
+        n.isRead ? Colors.transparent : AppTheme.primaryBlue.withOpacity(0.03),
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _iconForType(n),
-        const SizedBox(width: 12),
+        const SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                n.title,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: n.isRead ? FontWeight.normal : FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    n.title,
+                    style: TextStyle(
+                      color: AppTheme.textPrimary,
+                      fontSize: 14,
+                      fontWeight: n.isRead ? FontWeight.w500 : FontWeight.w700,
+                    ),
+                  ),
+                  Text(_formatTime(n.timestamp),
+                      style: const TextStyle(
+                          fontSize: 11, color: AppTheme.textSecondary)),
+                ],
               ),
               const SizedBox(height: 4),
               Text(n.body,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.7))),
-              const SizedBox(height: 4),
-              Text(_formatTime(n.timestamp),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.4))),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: 13,
+                      height: 1.4,
+                      color: AppTheme.textSecondary)),
             ],
           ),
         ),
@@ -690,44 +776,60 @@ Widget _dropdownNotificationTile(ThemeData theme, AppNotification n) {
 }
 
 Widget _iconForType(AppNotification n) {
+  // Mapping notification types to AppTheme colors
   final colorMap = {
-    NotificationType.admission: Colors.green,
-    NotificationType.discharge: Colors.blue,
-    NotificationType.medication: Colors.purple,
-    NotificationType.appointment: Colors.orange,
-    NotificationType.alert: Colors.red,
-    NotificationType.task: Colors.indigo,
-    NotificationType.system: Colors.grey,
+    NotificationType.admission: AppTheme.statusStable, // Green
+    NotificationType.discharge: AppTheme.textSecondary, // Grey
+    NotificationType.medication: AppTheme.statsPinkStart, // Pink
+    NotificationType.appointment: AppTheme.statsBlueStart, // Blue
+    NotificationType.alert: AppTheme.statusCritical, // Red
+    NotificationType.task: AppTheme.statusWarning, // Orange
+    NotificationType.system: AppTheme.textSecondary,
   };
+
   final iconMap = {
-    NotificationType.admission: Icons.person_add,
-    NotificationType.discharge: Icons.exit_to_app,
-    NotificationType.medication: Icons.medication,
-    NotificationType.appointment: Icons.calendar_today,
-    NotificationType.alert: Icons.warning_amber,
-    NotificationType.task: Icons.task_alt,
-    NotificationType.system: Icons.settings,
+    NotificationType.admission: Icons.person_add_rounded,
+    NotificationType.discharge: Icons.logout_rounded,
+    NotificationType.medication: Icons.medication_rounded,
+    NotificationType.appointment: Icons.calendar_today_rounded,
+    NotificationType.alert: Icons.warning_amber_rounded,
+    NotificationType.task: Icons.check_circle_outline_rounded,
+    NotificationType.system: Icons.settings_rounded,
   };
+
+  final color = colorMap[n.type] ?? AppTheme.primaryBlue;
+
   return Container(
-    padding: const EdgeInsets.all(8),
+    padding: const EdgeInsets.all(10),
     decoration: BoxDecoration(
-        color: colorMap[n.type]!.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(8)),
-    child: Icon(iconMap[n.type], color: colorMap[n.type], size: 18),
+      color: color.withOpacity(0.1),
+      shape: BoxShape.circle,
+    ),
+    child: Icon(iconMap[n.type], color: color, size: 20),
   );
 }
 
-Widget _emptyNotifications(ThemeData theme) {
+Widget _emptyNotifications() {
   return Padding(
-    padding: const EdgeInsets.all(20),
+    padding: const EdgeInsets.all(40),
     child: Column(
       children: [
-        Icon(Icons.notifications_off_outlined,
-            size: 48, color: theme.colorScheme.onSurface.withOpacity(0.3)),
-        const SizedBox(height: 8),
-        Text("You're all caught up!",
-            style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.5))),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration:
+              BoxDecoration(color: AppTheme.background, shape: BoxShape.circle),
+          child: Icon(Icons.notifications_off_outlined,
+              size: 32, color: AppTheme.textSecondary.withOpacity(0.5)),
+        ),
+        const SizedBox(height: 16),
+        const Text("No notifications",
+            style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textPrimary)),
+        const SizedBox(height: 4),
+        const Text("You're all caught up!",
+            style: TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
       ],
     ),
   );
